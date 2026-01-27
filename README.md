@@ -27,55 +27,45 @@ Perfect for:
 ## Architecture
 
 ```mermaid
-flowchart LR
-    subgraph ClientSide["🖥️ Client Manager (Port 5001)"]
-        direction TB
+flowchart TB
+    subgraph Client["Client Manager - Port 5001"]
         CW[Web Interface]
         CC[Connection Pool]
-        CD[Diagnostics Engine]
+        CD[Diagnostics Engine<br/>Packet Capture & Timing]
     end
 
-    subgraph Protocol["📡 Modbus TCP/IP"]
-        direction TB
-        MBAP[MBAP Header<br/>Transaction ID • Protocol ID • Length • Unit ID]
-        PDU[Function Codes<br/>01-06, 15-16, 23]
+    subgraph Protocol["Modbus TCP Protocol"]
+        MBAP[MBAP Header<br/>Transaction ID • Protocol ID<br/>Length • Unit ID]
+        PDU[Function Codes<br/>01 Read Coils • 02 Read Discrete<br/>03 Read Holding • 04 Read Input<br/>05 Write Coil • 06 Write Register<br/>15 Write Coils • 16 Write Registers]
     end
 
-    subgraph ServerSide["🏭 Server Manager (Port 5002)"]
-        direction TB
+    subgraph Server["Server Manager - Port 5002"]
         SW[Web Interface]
         SC[Server Controller]
         SIM[Simulation Engine<br/>Sine • Ramp • Random • Square]
     end
 
-    subgraph Registers["📊 Register Space (per server)"]
-        direction LR
+    subgraph Registers["Register Space"]
         HR[Holding Registers<br/>40001-49999]
         IR[Input Registers<br/>30001-39999]
         CO[Coils<br/>00001-09999]
         DI[Discrete Inputs<br/>10001-19999]
     end
 
-    subgraph Devices["🔌 Physical Devices"]
-        PLC1[Allen-Bradley<br/>ControlLogix]
-        PLC2[Siemens<br/>S7-1200]
-        PLC3[Omron<br/>NX/NJ Series]
-        VFD[Variable<br/>Frequency Drives]
+    subgraph Devices["Physical Devices"]
+        PLC[PLCs<br/>Allen-Bradley • Siemens • Omron]
+        VFD[VFDs & Drives]
+        SCADA[SCADA Systems]
     end
 
     CW --> CC
     CC --> CD
-    CC <-->|TCP:502-510| Protocol
-    Protocol <-->|Read/Write| SC
+    CC <--> Protocol
+    Protocol <--> SC
     SC --> SIM
     SC --> Registers
-    CC <-->|TCP:502| Devices
-
-    style ClientSide fill:#1a365d,stroke:#4299e1,color:#fff
-    style ServerSide fill:#1a365d,stroke:#48bb78,color:#fff
-    style Protocol fill:#2d3748,stroke:#ed8936,color:#fff
-    style Registers fill:#2d3748,stroke:#9f7aea,color:#fff
-    style Devices fill:#1a202c,stroke:#fc8181,color:#fff
+    CC <--> Devices
+    Devices <-.-> Server
 ```
 
 ---

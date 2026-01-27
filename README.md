@@ -27,43 +27,55 @@ Perfect for:
 ## Architecture
 
 ```mermaid
-flowchart TB
-    subgraph Web["Web Interfaces"]
-        SM[Server Manager<br/>Port 5002]
-        CM[Client Manager<br/>Port 5001]
+flowchart LR
+    subgraph ClientSide["🖥️ Client Manager (Port 5001)"]
+        direction TB
+        CW[Web Interface]
+        CC[Connection Pool]
+        CD[Diagnostics Engine]
     end
 
-    subgraph Core["Python Backend"]
-        SMB[Server Manager<br/>modbus_server_manager.py]
-        CMB[Client Manager<br/>modbus_client_manager.py]
-        DIAG[Diagnostics Module<br/>modbus_diagnostics.py]
+    subgraph Protocol["📡 Modbus TCP/IP"]
+        direction TB
+        MBAP[MBAP Header<br/>Transaction ID • Protocol ID • Length • Unit ID]
+        PDU[Function Codes<br/>01-06, 15-16, 23]
     end
 
-    subgraph Servers["Virtual Modbus Servers"]
-        S1[Server 1<br/>Port 502]
-        S2[Server 2<br/>Port 503]
-        S3[Server N<br/>Port ...]
+    subgraph ServerSide["🏭 Server Manager (Port 5002)"]
+        direction TB
+        SW[Web Interface]
+        SC[Server Controller]
+        SIM[Simulation Engine<br/>Sine • Ramp • Random • Square]
     end
 
-    subgraph External["External Devices"]
-        PLC[Physical PLCs]
-        SIM[Simulators]
-        SCADA[SCADA Systems]
+    subgraph Registers["📊 Register Space (per server)"]
+        direction LR
+        HR[Holding Registers<br/>40001-49999]
+        IR[Input Registers<br/>30001-39999]
+        CO[Coils<br/>00001-09999]
+        DI[Discrete Inputs<br/>10001-19999]
     end
 
-    SM --> SMB
-    CM --> CMB
-    SMB --> DIAG
-    CMB --> DIAG
-    SMB --> S1
-    SMB --> S2
-    SMB --> S3
-    CMB <--> S1
-    CMB <--> S2
-    CMB <--> PLC
-    CMB <--> SIM
-    External <-.-> S1
-    External <-.-> S2
+    subgraph Devices["🔌 Physical Devices"]
+        PLC1[Allen-Bradley<br/>ControlLogix]
+        PLC2[Siemens<br/>S7-1200]
+        PLC3[Omron<br/>NX/NJ Series]
+        VFD[Variable<br/>Frequency Drives]
+    end
+
+    CW --> CC
+    CC --> CD
+    CC <-->|TCP:502-510| Protocol
+    Protocol <-->|Read/Write| SC
+    SC --> SIM
+    SC --> Registers
+    CC <-->|TCP:502| Devices
+
+    style ClientSide fill:#1a365d,stroke:#4299e1,color:#fff
+    style ServerSide fill:#1a365d,stroke:#48bb78,color:#fff
+    style Protocol fill:#2d3748,stroke:#ed8936,color:#fff
+    style Registers fill:#2d3748,stroke:#9f7aea,color:#fff
+    style Devices fill:#1a202c,stroke:#fc8181,color:#fff
 ```
 
 ---
@@ -73,17 +85,17 @@ flowchart TB
 ### Server Manager
 Create and manage multiple Modbus TCP servers with configurable register spaces.
 
-![Server Manager](screenshots/01_server_manager_main.png)
+![Server Manager](screenshots/01_modbus_screenshot.png)
 
 ### Server Detail View
 Monitor registers, configure simulations, and view diagnostics for each server.
 
-![Server Detail](screenshots/02_server_detail.png)
+![Server Detail](screenshots/02_modbus_screenshot.png)
 
 ### Client Manager
 Connect to multiple Modbus devices and monitor/control registers.
 
-![Client Manager](screenshots/03_client_manager_main.png)
+![Client Manager](screenshots/03_modbus_screenshot.png)
 
 ---
 

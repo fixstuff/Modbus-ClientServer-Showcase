@@ -86,6 +86,7 @@ Monitor registers, configure simulations, and view diagnostics for each server.
 Connect to multiple Modbus devices and monitor/control registers.
 
 ![Client Manager](screenshots/03_modbus_screenshot.png)
+![Screenshot 4](screenshots/04_modbus_screenshot.png)![Screenshot 5](screenshots/05_modbus_screenshot.png)![Screenshot 6](screenshots/06_modbus_screenshot.png)![Screenshot 7](screenshots/07_modbus_screenshot.png)![Screenshot 8](screenshots/08_modbus_screenshot.png)![Screenshot 9](screenshots/09_modbus_screenshot.png)![Screenshot 10](screenshots/10_modbus_screenshot.png)![Screenshot 11](screenshots/11_modbus_screenshot.png)![Screenshot 12](screenshots/12_modbus_screenshot.png)![Screenshot 13](screenshots/13_modbus_screenshot.png)
 
 ---
 
